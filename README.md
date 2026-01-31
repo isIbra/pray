@@ -34,10 +34,10 @@ pray
 pray next
 
 # Different city
-pray --city Cairo
+pray --city Cairo --country EG
 
 # Different calculation method
-pray --method 2 --city London
+pray --city London --country GB --method 2
 ```
 
 ## 📖 Usage
@@ -89,14 +89,13 @@ pray next
 ### Different Cities
 
 ```bash
-# Major cities work by name
-pray --city "New York"
-pray --city London
-pray --city Dubai
-pray --city Istanbul
-
-# For better accuracy, include country
-pray --city "Toronto" --country "CA"
+# Major cities with country codes
+pray --city London --country GB
+pray --city "New York" --country US
+pray --city Dubai --country AE
+pray --city Istanbul --country TR
+pray --city Toronto --country CA
+pray --city Jakarta --country ID
 ```
 
 ### Calculation Methods
@@ -157,9 +156,10 @@ export PRAY_DEFAULT_METHOD="3"
 ### Command Line Options
 
 ```bash
-  --city string     City name for prayer times (default "Riyadh")
-  --method int      Calculation method (4 = Umm Al-Qura) (default 4)
-  -h, --help        Show help information
+  --city string       City name for prayer times (default "Riyadh")
+  --country string    Country code (default "SA" for Saudi Arabia)
+  --method int        Calculation method (4 = Umm Al-Qura) (default 4)
+  -h, --help          Show help information
 ```
 
 ## 🌍 Supported Locations

@@ -128,6 +128,7 @@ var prayerOrder = []string{"Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"}
 
 func main() {
 	var city string
+	var country string
 	var method int
 
 	var rootCmd = &cobra.Command{
@@ -135,7 +136,7 @@ func main() {
 		Short: "🕌 Prayer times in your terminal",
 		Long:  "A beautiful CLI tool to display Islamic prayer times with accurate calculations based on your location.",
 		Run: func(cmd *cobra.Command, args []string) {
-			showPrayerTimes(city, method)
+			showPrayerTimes(city, country, method)
 		},
 	}
 
@@ -143,13 +144,14 @@ func main() {
 		Use:   "next",
 		Short: "Show the next prayer time with countdown",
 		Run: func(cmd *cobra.Command, args []string) {
-			showNextPrayer(city, method)
+			showNextPrayer(city, country, method)
 		},
 	}
 
 	rootCmd.AddCommand(nextCmd)
 	
 	rootCmd.PersistentFlags().StringVar(&city, "city", "Riyadh", "City name for prayer times")
+	rootCmd.PersistentFlags().StringVar(&country, "country", "SA", "Country code (default: SA for Saudi Arabia)")
 	rootCmd.PersistentFlags().IntVar(&method, "method", 4, "Calculation method (4 = Umm Al-Qura)")
 
 	if err := rootCmd.Execute(); err != nil {
@@ -157,8 +159,8 @@ func main() {
 	}
 }
 
-func fetchPrayerTimes(city string, method int) (*PrayerTimesResponse, error) {
-	url := fmt.Sprintf("http://api.aladhan.com/v1/timingsByCity?city=%s&country=SA&method=%d", city, method)
+func fetchPrayerTimes(city, country string, method int) (*PrayerTimesResponse, error) {
+	url := fmt.Sprintf("http://api.aladhan.com/v1/timingsByCity?city=%s&country=%s&method=%d", city, country, method)
 	
 	resp, err := http.Get(url)
 	if err != nil {
@@ -238,8 +240,8 @@ func formatDuration(d time.Duration) string {
 	return fmt.Sprintf("%dm", minutes)
 }
 
-func showPrayerTimes(city string, method int) {
-	data, err := fetchPrayerTimes(city, method)
+func showPrayerTimes(city, country string, method int) {
+	data, err := fetchPrayerTimes(city, country, method)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
@@ -305,8 +307,8 @@ func showPrayerTimes(city string, method int) {
 	fmt.Println(prayerStyle.Render(methodInfo))
 }
 
-func showNextPrayer(city string, method int) {
-	data, err := fetchPrayerTimes(city, method)
+func showNextPrayer(city, country string, method int) {
+	data, err := fetchPrayerTimes(city, country, method)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
